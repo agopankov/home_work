@@ -80,3 +80,17 @@ func TestTop10(t *testing.T) {
 		}
 	})
 }
+
+func TestTop10Additional(t *testing.T) {
+	t.Run("equal frequency", func(t *testing.T) {
+		text = "dog cat bird fish mouse frog dog cat bird fish"
+		expected := []string{"bird", "cat", "dog", "fish", "frog", "mouse"}
+		require.Equal(t, expected, Top10(text))
+	})
+
+	t.Run("punctuation marks", func(t *testing.T) {
+		text = "dog, cat! bird. fish; mouse: frog? dog, cat! bird."
+		expected := []string{"bird.", "cat!", "dog,", "fish;", "frog?", "mouse:"}
+		require.Equal(t, expected, Top10(text))
+	})
+}
