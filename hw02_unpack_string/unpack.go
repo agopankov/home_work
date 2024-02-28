@@ -31,9 +31,8 @@ func Unpack(s string) (string, error) {
 			prevRune = 0
 		case r == '\\' && !escapeMode:
 			escapeMode = true
-		case escapeMode && r == 'n':
-			escapeMode = false
-			continue
+		case escapeMode && !unicode.IsDigit(r) && r != '\\':
+			return "", ErrInvalidString
 		default:
 			if prevRune != 0 {
 				builder.WriteRune(prevRune)

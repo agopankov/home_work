@@ -56,7 +56,7 @@ func TestUnpackAdditional(t *testing.T) {
 		{input: "😊2🚀3", expected: "😊😊🚀🚀🚀", err: nil},
 		{input: "123", expected: "", err: ErrInvalidString},
 		{input: "a0b0c0", expected: "", err: nil},
-		{input: `aaab\n`, expected: "aaab", err: nil},
+		{input: `aaab\n`, expected: "", err: ErrInvalidString},
 		{input: `aaab\`, expected: "", err: ErrInvalidString},
 	}
 
