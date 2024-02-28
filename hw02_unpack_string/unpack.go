@@ -14,10 +14,14 @@ func Unpack(s string) (string, error) {
 	var prevRune rune
 	escapeMode := false
 
-	for i, r := range s {
+	if len(s) == 0 {
+		return "", nil
+	}
+
+	for _, r := range s {
 		switch {
 		case unicode.IsDigit(r) && !escapeMode:
-			if i == 0 || prevRune == 0 {
+			if prevRune == 0 {
 				return "", ErrInvalidString
 			}
 			count, _ := strconv.Atoi(string(r))
@@ -27,6 +31,8 @@ func Unpack(s string) (string, error) {
 			prevRune = 0
 		case r == '\\' && !escapeMode:
 			escapeMode = true
+		case escapeMode && !unicode.IsDigit(r) && r != '\\':
+			return "", ErrInvalidString
 		default:
 			if prevRune != 0 {
 				builder.WriteRune(prevRune)
@@ -35,6 +41,11 @@ func Unpack(s string) (string, error) {
 			escapeMode = false
 		}
 	}
+
+	if escapeMode {
+		return "", ErrInvalidString
+	}
+
 	if prevRune != 0 && !escapeMode {
 		builder.WriteRune(prevRune)
 	}
